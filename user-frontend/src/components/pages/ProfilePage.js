@@ -1,24 +1,18 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  return user ? (
+  return (
     <div>
-      <h2>Profil</h2>
-      <p>Email : {user.email}</p>
-      <button onClick={handleLogout}>Se déconnecter</button>
+      <h1>Profil</h1>
+      {user ? (
+        <p>Email : {user.email}</p>
+      ) : (
+        <p>Chargement des informations utilisateur...</p>
+      )}
     </div>
-  ) : (
-    <p>Chargement...</p>
   );
 };
 

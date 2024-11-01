@@ -5,20 +5,19 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 
 const NavigationBar = () => {
-  const { user, logout } = useContext( AuthContext );
+  const { user, logout } = useContext(AuthContext);
+  console.log("État de l'utilisateur dans NavigationBar:", user); // Debug
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/login'); // Utilise navigate pour la redirection après déconnexion
+    navigate('/login');
   };
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
       <Container>
-        <Navbar.Brand as={Link} to="/">
-          Teccartfit
-        </Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">Teccartfit</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -28,7 +27,9 @@ const NavigationBar = () => {
           <Nav>
             {user ? (
               <>
-                <Navbar.Text className="me-2">Connecté en tant que : {user.email}</Navbar.Text>
+                <Navbar.Text className="me-2">
+                  Connecté en tant que : {user.email}
+                </Navbar.Text>
                 <Button variant="outline-light" onClick={handleLogout}>Déconnexion</Button>
               </>
             ) : (

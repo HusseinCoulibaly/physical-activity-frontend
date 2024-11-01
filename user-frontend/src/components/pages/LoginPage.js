@@ -13,13 +13,16 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password });
-      navigate('/profile');
+      const user = await login({ email, password });
+      if (user) {
+        navigate('/profile'); // Redirige vers le profil seulement si la connexion réussit
+      }
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
       alert("Échec de la connexion");
     }
   };
+  
 
   return (
     <div className="login-form-container">

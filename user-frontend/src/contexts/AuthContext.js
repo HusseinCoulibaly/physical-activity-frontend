@@ -4,55 +4,65 @@ import axios from 'axios';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // État de l'utilisateur connecté
 
   useEffect(() => {
-    // Charger l'utilisateur si une session est active
     const checkSession = async () => {
       try {
-        console.log("Vérification du token dans localStorage...");
         const token = localStorage.getItem('token');
-        if (!token) throw new Error("Token manquant dans le localStorage");
-    
-        console.log("Envoi de la requête à /api/users/check-session avec le token...");
+        if (!token) {
+          console.log("Token manquant dans le localStorage");
+          return;
+        }
+  
         const response = await axios.get('/api/users/check-session', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-    
-        console.log("Réponse reçue de l'API :", response.data);
-        return response.data.user;
+  
+        if (response.data.user) {
+          setUser(response.data.user);
+          console.log("Session utilisateur restaurée :", response.data.user);
+        }
       } catch (error) {
         console.error("Erreur de session :", error);
         if (error.response && error.response.status === 401) {
           alert("Votre session a expiré. Veuillez vous reconnecter.");
           localStorage.removeItem('token');
           window.location.href = '/login';
-        } else {
-          console.error("Une erreur inattendue est survenue :", error.message);
         }
-        return null;
       }
     };
-    
-    
-    
+  
     checkSession();
   }, []);
+  
 
   const login = async (credentials) => {
-    const response = await axios.post('/api/users/login', credentials);
-    const token = response.data.token;  // Assure-toi que le backend retourne bien un token dans response.data.token
-    localStorage.setItem('token', token); // Stocker le token pour les requêtes futures
-    return response.data.user;
-  };
+    try {
+      const response = await axios.post('/api/users/login', credentials);
+      const { id, name, email, token } = response.data; // Extraction directe des données
   
+      if (id && name && email && token) {
+        localStorage.setItem('token', token);
+        
+        // Mettre à jour `user` avec les informations utilisateur
+        setUser({ id, name, email });
+        console.log("État de l'utilisateur après connexion :", { id, name, email });
+  
+        return { id, name, email };
+      } else {
+        console.error("Erreur : données utilisateur ou token manquants dans la réponse.");
+      }
+    } catch (error) {
+      console.error("Erreur de connexion :", error);
+    }
+  };
   
 
   const logout = async () => {
     await axios.post('/api/users/logout');
-    setUser(null); 
+    localStorage.removeItem('token'); // Supprime le token lors de la déconnexion
+    setUser(null); // Réinitialise l'état utilisateur
   };
 
   return (
