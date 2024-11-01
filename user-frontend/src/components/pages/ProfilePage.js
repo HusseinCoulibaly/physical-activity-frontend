@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const { user, logout } = useContext(AuthContext);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    history.push('/login');
+    navigate('/login');
   };
 
   return user ? (
