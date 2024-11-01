@@ -6,11 +6,11 @@ import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 
 const NavigationBar = () => {
   const { user, logout } = useContext( AuthContext );
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    history.push('/login');
+    navigate('/login'); // Utilise navigate pour la redirection après déconnexion
   };
 
   return (
