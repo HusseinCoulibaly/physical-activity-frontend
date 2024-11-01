@@ -1,0 +1,33 @@
+
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Fond noir */
+    color: #fff; /* Texte blanc */
+  }
+  
+  .logo-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logo {
+    max-width: 60%;
+    height: auto;
+  }
+  
+  .footer {
+    background-color: #111;
+    color: #ccc;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+  }
+  
