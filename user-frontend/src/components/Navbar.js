@@ -1,12 +1,11 @@
+// NavigationBar.js
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 
 const NavigationBar = () => {
   const { user, logout } = useContext(AuthContext);
-  console.log("État de l'utilisateur dans NavigationBar:", user); // Debug
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,6 +22,7 @@ const NavigationBar = () => {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Accueil</Nav.Link>
             <Nav.Link as={Link} to="/profile">Profil</Nav.Link>
+            {user && <Nav.Link as={Link} to="/health-dashboard">Santé</Nav.Link>} {/* Lien conditionnel */}
           </Nav>
           <Nav>
             {user ? (
