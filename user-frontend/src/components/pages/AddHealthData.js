@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../contexts/AuthContext';
+import { Form, Button } from 'react-bootstrap';
 
 const AddHealthData = ({ onNewData }) => {
   const { user } = useContext(AuthContext);
@@ -13,7 +14,6 @@ const AddHealthData = ({ onNewData }) => {
     e.preventDefault();
 
     try {
-      // Utilisation de l'URL complète pour l'ajout de données
       const response = await axios.post('http://localhost:5001/api/health/add', {
         userId: user.id,
         heartRate,
@@ -33,33 +33,41 @@ const AddHealthData = ({ onNewData }) => {
   };
 
   return (
-    <div>
-      <h2>Ajouter des Données de Santé</h2>
-      <form onSubmit={handleSubmit}>
-        <input
+    <Form onSubmit={handleSubmit}>
+      <Form.Group className="mb-3">
+        <Form.Label>Fréquence Cardiaque</Form.Label>
+        <Form.Control
           type="number"
           placeholder="Fréquence Cardiaque"
           value={heartRate}
           onChange={(e) => setHeartRate(e.target.value)}
           required
         />
-        <input
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Calories Brûlées</Form.Label>
+        <Form.Control
           type="number"
           placeholder="Calories Brûlées"
           value={caloriesBurned}
           onChange={(e) => setCaloriesBurned(e.target.value)}
           required
         />
-        <input
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Nombre de Pas</Form.Label>
+        <Form.Control
           type="number"
           placeholder="Nombre de Pas"
           value={steps}
           onChange={(e) => setSteps(e.target.value)}
           required
         />
-        <button type="submit">Ajouter</button>
-      </form>
-    </div>
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Ajouter
+      </Button>
+    </Form>
   );
 };
 
