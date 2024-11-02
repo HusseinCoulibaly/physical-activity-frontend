@@ -7,7 +7,8 @@ import LoginPage from './components/pages/LoginPage';
 import RegisterPage from './components/pages/RegisterPage';
 import ProfilePage from './components/pages/ProfilePage';
 import WelcomePage from './components/pages/WelcomePage';
-import HealthDashboard from './components/pages/HealthDashboard'; // Import du tableau de bord santé
+import HealthDashboard from './components/pages/HealthDashboard'; 
+import RecommendationsPage from './components/pages/RecommendationsPage'; 
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/health-dashboard" element={<HealthDashboard />} /> {/* Nouvelle route */}
+          <Route path="/health-dashboard" element={<HealthDashboard />} /> 
+          <Route path="/recommendations" element={<RecommendationsPage />} />
         </Routes>
       </Router>
     </AuthProvider>
