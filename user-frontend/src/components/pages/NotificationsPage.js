@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
+import './NotificationsPage.css';
 
 const NotificationsPage = () => {
   const { user } = useContext(AuthContext); // Récupère l'utilisateur du contexte
@@ -12,7 +13,6 @@ const NotificationsPage = () => {
       if (!user || !user.id) return;
 
       try {
-        // Utilisation de l'URL complète pour accéder au service de notifications sur le port 5003
         const response = await axios.get(`http://localhost:5003/api/notifications/${user.id}`);
         setNotifications(response.data);
       } catch (error) {
@@ -25,7 +25,6 @@ const NotificationsPage = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      // Utilisation de l'URL complète pour la mise à jour de la notification
       await axios.put(`http://localhost:5003/api/notifications/${notificationId}/read`);
       setNotifications(notifications.map(notification =>
         notification._id === notificationId ? { ...notification, isRead: true } : notification
@@ -36,20 +35,26 @@ const NotificationsPage = () => {
   };
 
   return (
-    <div>
-      <h2>Notifications</h2>
-      <ul>
-        {notifications.map(notification => (
-          <li key={notification._id} style={{ textDecoration: notification.isRead ? 'line-through' : 'none' }}>
-            <p><strong>Type:</strong> {notification.type}</p>
-            <p><strong>Message:</strong> {notification.message}</p>
-            <p><strong>Date:</strong> {new Date(notification.createdAt).toLocaleString()}</p>
-            {!notification.isRead && (
-              <button onClick={() => markAsRead(notification._id)}>Marquer comme lu</button>
-            )}
-          </li>
-        ))}
-      </ul>
+    <div className="notifications-container">
+      <h2>Mes Notifications</h2>
+      <div className="notifications-list">
+        {notifications.length > 0 ? (
+          notifications.map(notification => (
+            <div key={notification._id} className={`notification-card ${notification.isRead ? 'read' : 'unread'}`}>
+              <div className="notification-header">
+                <span className="notification-type">{notification.type}</span>
+                {!notification.isRead && (
+                  <button className="mark-as-read" onClick={() => markAsRead(notification._id)}>Marquer comme lu</button>
+                )}
+              </div>
+              <p className="notification-message">{notification.message}</p>
+              <p className="notification-date">{new Date(notification.createdAt).toLocaleString()}</p>
+            </div>
+          ))
+        ) : (
+          <p className="no-notifications">Aucune notification à afficher</p>
+        )}
+      </div>
     </div>
   );
 };

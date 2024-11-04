@@ -20,17 +20,7 @@ const HealthDashboard = () => {
         setIsLoading(true);
         const response = await axios.get(`http://localhost:5001/api/health/${user.id}/summary`);
         const data = response.data;
-
-        // Vérifie la période de données disponible et ajuste le timeRange si nécessaire
-        if (data.entries && data.entries.length > 0) {
-          const firstEntryDate = new Date(data.entries[data.entries.length - 1].date);
-          const daysAvailable = (new Date() - firstEntryDate) / (1000 * 60 * 60 * 24); // Différence en jours
-
-          if (daysAvailable < 7) {
-            setTimeRange(Math.ceil(daysAvailable)); // Ajuste pour afficher tous les jours disponibles
-          }
-        }
-        
+        console.log("Données récupérées :", data); // Vérifie les données récupérées
         setHealthData(data);
       } catch (error) {
         console.error("Erreur de récupération des données de santé :", error);
@@ -39,23 +29,28 @@ const HealthDashboard = () => {
         setIsLoading(false);
       }
     };
-
+  
     if (user) {
       fetchHealthData();
     }
   }, [user]);
+  
 
   // Filtre les données de santé en fonction de la plage de temps sélectionnée
   const filterDataByTimeRange = () => {
     if (!healthData || !healthData.entries) return [];
     
     const currentDate = new Date();
-    return healthData.entries.filter(entry => {
+    const filteredData = healthData.entries.filter(entry => {
       const entryDate = new Date(entry.date);
       const timeDiff = (currentDate - entryDate) / (1000 * 60 * 60 * 24); // Différence en jours
       return timeDiff <= timeRange;
     });
+    
+    console.log("Données filtrées pour le graphique :", filteredData); // Vérifie les données filtrées
+    return filteredData;
   };
+  
 
   return (
     <Container>
@@ -103,14 +98,15 @@ const HealthDashboard = () => {
               <Card.Body>
                 <Card.Title>Calories Brûlées</Card.Title>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={filterDataByTimeRange()}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="caloriesBurned" stroke="#8884d8" activeDot={{ r: 8 }} />
-                  </LineChart>
-                </ResponsiveContainer>
+  <LineChart data={filterDataByTimeRange()}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis dataKey="date" />
+    <YAxis />
+    <Tooltip />
+    <Line type="monotone" dataKey="caloriesBurned" stroke="#8884d8" activeDot={{ r: 8 }} />
+  </LineChart>
+</ResponsiveContainer>
+
               </Card.Body>
             </Card>
           </Col>
