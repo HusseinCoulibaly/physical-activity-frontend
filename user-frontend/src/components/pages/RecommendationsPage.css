@@ -1,0 +1,20 @@
+.recommendation-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .recommendation-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .recommendation-stats p {
+    margin: 5px 0;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
