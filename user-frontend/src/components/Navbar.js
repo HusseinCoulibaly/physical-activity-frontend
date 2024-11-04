@@ -25,6 +25,8 @@ const NavigationBar = () => {
             {user && <Nav.Link as={Link} to="/health-dashboard">Santé</Nav.Link>}
             <Nav.Link as={Link} to="/recommendations">Recommandations</Nav.Link> 
             <Nav.Link as={Link} to="/notifications">Notifications</Nav.Link>
+            <Nav.Link as={Link} to="/preferences">Préférences Notifications</Nav.Link>
+
           </Nav>
           <Nav>
             {user ? (
