@@ -9,6 +9,7 @@ import ProfilePage from './components/pages/ProfilePage';
 import WelcomePage from './components/pages/WelcomePage';
 import HealthDashboard from './components/pages/HealthDashboard'; 
 import RecommendationsPage from './components/pages/RecommendationsPage'; 
+import NotificationsPage from './components/pages/NotificationsPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/health-dashboard" element={<HealthDashboard />} /> 
           <Route path="/recommendations" element={<RecommendationsPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
         </Routes>
       </Router>
     </AuthProvider>
