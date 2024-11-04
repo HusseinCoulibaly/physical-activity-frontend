@@ -1,77 +1,56 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
-import { Container, ListGroup, Button, Badge } from 'react-bootstrap';
 
 const NotificationsPage = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext); // Récupère l'utilisateur du contexte
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Récupérer les notifications de l'utilisateur uniquement si userId est disponible
     const fetchNotifications = async () => {
+      if (!user || !user.id) return;
+
       try {
-        // Correction de l'URL
-        const response = await axios.get(`http://localhost:5003/api/notifications/preferences/${user.id}`);
+        // Utilisation de l'URL complète pour accéder au service de notifications sur le port 5003
+        const response = await axios.get(`http://localhost:5003/api/notifications/${user.id}`);
         setNotifications(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des notifications :", error);
-      } finally {
-        setLoading(false);
       }
     };
 
-    if (user) {
-      fetchNotifications();
-    }
+    fetchNotifications();
   }, [user]);
 
   const markAsRead = async (notificationId) => {
     try {
-      await axios.post(`http://localhost:5003/api/notifications/${notificationId}/mark-as-read`);
-      setNotifications((prevNotifications) =>
-        prevNotifications.map((notif) =>
-          notif.id === notificationId ? { ...notif, isRead: true } : notif
-        )
-      );
+      // Utilisation de l'URL complète pour la mise à jour de la notification
+      await axios.put(`http://localhost:5003/api/notifications/${notificationId}/read`);
+      setNotifications(notifications.map(notification =>
+        notification._id === notificationId ? { ...notification, isRead: true } : notification
+      ));
     } catch (error) {
       console.error("Erreur lors de la mise à jour de la notification :", error);
     }
   };
 
-  if (loading) {
-    return <p>Chargement des notifications...</p>;
-  }
-
   return (
-    <Container className="mt-4">
+    <div>
       <h2>Notifications</h2>
-      <ListGroup variant="flush">
-        {notifications.length > 0 ? (
-          notifications.map((notification) => (
-            <ListGroup.Item
-              key={notification.id}
-              className={notification.isRead ? 'read' : 'unread'}
-            >
-              {notification.message}
-              {!notification.isRead && (
-                <Badge bg="info" className="ms-2">Nouvelle</Badge>
-              )}
-              <Button
-                variant="link"
-                size="sm"
-                onClick={() => markAsRead(notification.id)}
-                className="float-end"
-              >
-                Marquer comme lu
-              </Button>
-            </ListGroup.Item>
-          ))
-        ) : (
-          <p>Aucune notification pour le moment.</p>
-        )}
-      </ListGroup>
-    </Container>
+      <ul>
+        {notifications.map(notification => (
+          <li key={notification._id} style={{ textDecoration: notification.isRead ? 'line-through' : 'none' }}>
+            <p><strong>Type:</strong> {notification.type}</p>
+            <p><strong>Message:</strong> {notification.message}</p>
+            <p><strong>Date:</strong> {new Date(notification.createdAt).toLocaleString()}</p>
+            {!notification.isRead && (
+              <button onClick={() => markAsRead(notification._id)}>Marquer comme lu</button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
